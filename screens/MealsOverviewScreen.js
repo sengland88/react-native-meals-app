@@ -1,19 +1,24 @@
+// react and react native components
 import { useLayoutEffect } from "react";
-import { Text, View, StyleSheet, FlatList } from "react-native";
-import MealItem from "../components/MealItem";
+
+// custom components, etc
+import MealsList from "../components/MealsList/MealsList";
 import { CATEGORIES, MEALS } from "../data/dummy-data";
 
+// component to be rendered in the app
 function MealsOverviewScreen({ route, navigation }) {
+  // get the params from the route, which is set via nav in CategoriesScreen.js
   const catId = route.params.categoryId;
 
+  // grab the meals that match with the category id
   const displayedMeals = MEALS.filter((mealItem) => {
     return mealItem.categoryIds.indexOf(catId) >= 0;
   });
 
-  const categoryTitle = CATEGORIES.find(
-    (categoryId) => categoryId.id === catId
-  );
-
+  // fires at the same time this component is rendered via navigation
+  // and helps make sure that the name of this page is captured before
+  // the component is rendered on the screen, so we wont see a quick change
+  // in the page name
   useLayoutEffect(() => {
     const categoryTitle = CATEGORIES.find(
       (categoryId) => categoryId.id === catId
@@ -22,43 +27,10 @@ function MealsOverviewScreen({ route, navigation }) {
     navigation.setOptions({
       title: categoryTitle,
     });
-  }, [catId, navigation]);
+  }, [catId, navigation]); // the items that need to watch, so any time catId or Navigation changes, this should fire (i think)
 
-  function renderMealItem(itemData) {
-    const item = itemData.item;
-
-    const mealItemProps = {
-      id: item.id,
-      title: item.title,
-      imageURL: item.imageUrl,
-      duration: item.duration,
-      complexity: item.complexity,
-      affordability: item.affordability,
-    };
-
-    return (
-      <View>
-        <MealItem {...mealItemProps} />
-      </View>
-    );
-  }
-
-  return (
-    <View style={styles.container}>
-      <FlatList
-        data={displayedMeals}
-        keyExtractor={(item) => item.id}
-        renderItem={renderMealItem}
-      />
-    </View>
-  );
+  return <MealsList items={displayedMeals} />;
 }
 
+// export the component to be rendered
 export default MealsOverviewScreen;
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 16,
-  },
-});

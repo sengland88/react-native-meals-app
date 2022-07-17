@@ -1,5 +1,7 @@
+// react and react native components
 import { Text, View, StyleSheet } from "react-native";
 
+// component to be rendered
 function MealDetails({
   duration,
   complexity,

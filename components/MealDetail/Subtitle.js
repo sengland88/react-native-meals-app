@@ -1,5 +1,8 @@
+// react native and react components
 import { Text, View, StyleSheet } from "react-native";
 
+// component to be rendered
+// children: anything placed between the element tags where this is used
 function Subtitle({ children }) {
   return (
     <View style={styles.subtitleContainer}>
@@ -10,6 +13,7 @@ function Subtitle({ children }) {
 
 export default Subtitle;
 
+// styles to make it pretty!
 const styles = StyleSheet.create({
   subtitleContainer: {
     padding: 6,

@@ -1,5 +1,10 @@
+// react and react native components
 import { Pressable, Text, View, StyleSheet, Platform } from "react-native";
 
+// component to be rendered
+// title: title of the tile
+// color: color of the title
+// onPress: when onPress is fired from pressable, this will be sent back to parent
 function CategoryGridTile({ title, color, onPress }) {
   return (
     <View style={styles.gridItem}>
@@ -44,7 +49,7 @@ const styles = StyleSheet.create({
     padding: 16,
     justifyContent: "center",
     alignItems: "center",
-    borderRadius: 8
+    borderRadius: 8,
   },
   title: {
     fontWeight: "bold",

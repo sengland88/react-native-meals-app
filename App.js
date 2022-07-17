@@ -1,17 +1,25 @@
+// react and react native components
 import { StatusBar } from "expo-status-bar";
-import { Button, StyleSheet, Text, View } from "react-native";
-import CategoriesScreen from "./screens/CategoriesScreen";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import MealsOverviewScreen from "./screens/MealsOverviewScreen";
-import MealsDetailScreen from "./screens/MealsDetailScreen";
 import { createDrawerNavigator } from "@react-navigation/drawer";
-import FavoritesScreen from "./screens/FavoritesScreen";
 import { Ionicons } from "@expo/vector-icons";
 
-const Stack = createNativeStackNavigator();
-const Drawer = createDrawerNavigator();
+// custom components, etc
+import CategoriesScreen from "./screens/CategoriesScreen";
+import FavoritesScreen from "./screens/FavoritesScreen";
+import MealsOverviewScreen from "./screens/MealsOverviewScreen";
+import MealsDetailScreen from "./screens/MealsDetailScreen";
 
+// use context for across app information - used for favorites
+import FavoritesContextProvider from "./store/context/favorites-context";
+
+// app navigation
+const Stack = createNativeStackNavigator(); // native stack nav
+const Drawer = createDrawerNavigator(); // drawer nav
+
+// the drawer navigation and screens that are held within the drawer nav
+// using two screens right now: All Cats and Favorites, which is access from the top most level
 function DrawerNavigator() {
   return (
     <Drawer.Navigator
@@ -31,7 +39,7 @@ function DrawerNavigator() {
     >
       <Drawer.Screen
         name="Categories"
-        component={CategoriesScreen}
+        component={CategoriesScreen} // uses the custom component that has flat list
         options={{
           title: "All Categories",
           drawerIcon: ({ color, size }) => (
@@ -55,42 +63,41 @@ function DrawerNavigator() {
 export default function App() {
   return (
     <>
+      {/* control status car */}
       <StatusBar style="light" />
-      <NavigationContainer>
-        <Stack.Navigator
-          screenOptions={{
-            headerStyle: { backgroundColor: "#351401" },
-            headerTintColor: "white",
-            contentStyle: {
-              backgroundColor: "#3f2f25",
-            },
-          }}
-        >
-          <Stack.Screen
-            name="Drawer"
-            component={DrawerNavigator}
-            options={{
-              headerShown: false,
-            }}
-          />
-          <Stack.Screen name="MealsOverview" component={MealsOverviewScreen} />
 
-          <Stack.Screen
-            name="MealDetail"
-            component={MealsDetailScreen}
-            options={{ title: "About the Meal" }}
-          />
-        </Stack.Navigator>
-      </NavigationContainer>
+      {/* the context that is accessed app wide  */}
+      <FavoritesContextProvider>
+        <NavigationContainer>
+          <Stack.Navigator
+            screenOptions={{
+              headerStyle: { backgroundColor: "#351401" },
+              headerTintColor: "white",
+              contentStyle: {
+                backgroundColor: "#3f2f25",
+              },
+            }}
+          >
+            <Stack.Screen
+              name="Drawer"
+              component={DrawerNavigator} // uses the drawer
+              options={{
+                headerShown: false,
+              }}
+            />
+            <Stack.Screen
+              name="MealsOverview"
+              component={MealsOverviewScreen}
+            />
+
+            <Stack.Screen
+              name="MealDetail"
+              component={MealsDetailScreen}
+              options={{ title: "About the Meal" }}
+            />
+          </Stack.Navigator>
+        </NavigationContainer>
+      </FavoritesContextProvider>
     </>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-});

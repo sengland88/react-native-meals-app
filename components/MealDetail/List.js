@@ -1,5 +1,10 @@
+// react and react native components
 import { Text, View, StyleSheet } from "react-native";
 
+// component to be rendered
+// data: the data to be displayed
+// for each item in data, we display a text
+// used in meal details :D
 function List({ data }) {
   return data.map((dataPoint) => (
     <View key={dataPoint} style={styles.listItem}>

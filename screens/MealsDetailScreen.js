@@ -1,40 +1,54 @@
-import { useLayoutEffect } from "react";
-import {
-  Image,
-  Text,
-  View,
-  StyleSheet,
-  ScrollView,
-  Button,
-} from "react-native";
-import IconButton from "../components/IconButton";
+// react and react native components, etc
+import { useContext, useLayoutEffect } from "react";
+import { Image, Text, View, StyleSheet, ScrollView } from "react-native";
+import { FavoritesContext } from "../store/context/favorites-context";
+
+// custom components, etc
 import List from "../components/MealDetail/List";
 import Subtitle from "../components/MealDetail/Subtitle";
 import MealDetails from "../components/MealDetails";
 import { MEALS } from "../data/dummy-data";
+import IconButton from "../components/IconButton";
 
+// component that needs to be rendered
+// route: provided by nav
+// navigation: provided by nav
 function MealsDetailScreen({ route, navigation }) {
+  // variable to access fav meals
+  const favoriteMealCtx = useContext(FavoritesContext);
+
+  // extract the id from the route params, which is set from the MealItem.js
   const mealId = route.params.mealId;
 
+  // the selected meal the user wants to know more about
   const selectedMeal = MEALS.find((meal) => meal.id === mealId);
 
-  function headerButtonPressHandler() {
-    console.log("pressed");
+  // checks the context to see if this meal is part of the user's favorite meals
+  const mealIsFavorite = favoriteMealCtx.ids.includes(mealId);
+
+  // handles adding/removing this meal from user's fav
+  function changeFavoriteStatusHandler() {
+    if (mealIsFavorite) {
+      favoriteMealCtx.removeFavorite(mealId);
+    } else {
+      favoriteMealCtx.addFavorite(mealId);
+    }
   }
 
+  // fires at the same time this app is rendered to display the proper icon button so there is no glitching
   useLayoutEffect(() => {
     navigation.setOptions({
       headerRight: () => {
         return (
           <IconButton
-            icon="star"
+            icon={mealIsFavorite ? "star" : "star-outline"} // depends on the context and if the meal is a fav
             color="white"
-            onPress={headerButtonPressHandler}
+            onPress={changeFavoriteStatusHandler}
           />
         );
       },
     });
-  }, [navigation, headerButtonPressHandler]);
+  }, [navigation, changeFavoriteStatusHandler]);
 
   return (
     <ScrollView style={styles.rootContainer}>

@@ -1,3 +1,4 @@
+// react and react native components, etc
 import {
   Image,
   Pressable,
@@ -7,8 +8,15 @@ import {
   Platform,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import MealDetails from "./MealDetails";
 
+// custom components, etc
+import MealDetails from "../MealDetails";
+
+// component to be rendered
+// id: id of the meal
+// title: title of the meal
+// imageUrl: url of image (which needs to be set via uri since it is coming from the web)
+// duration, complexity and affordability: self explanatory for the meal
 function MealItem({
   id,
   title,
@@ -17,8 +25,10 @@ function MealItem({
   complexity,
   affordability,
 }) {
+  // nav!
   const navigation = useNavigation();
 
+  // handles nav to the meals details component and sets the param, which can be accessed via route :D
   function selectMealItemHandler() {
     navigation.navigate("MealDetail", {
       mealId: id,
